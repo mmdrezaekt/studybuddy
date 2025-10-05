@@ -63,8 +63,18 @@ const Register: React.FC<RegisterProps> = ({ onToggleMode }) => {
         console.log('📊 User data to be saved:', userData);
         console.log('🔗 Database instance:', db);
         console.log('🆔 User UID:', user.uid);
+        console.log('🔐 User authenticated:', user.uid);
         
-        await setDoc(doc(db, 'users', user.uid), userData);
+        // Test with minimal data first
+        const testData = {
+          uid: user.uid,
+          email: user.email,
+          displayName: formData.displayName,
+          createdAt: new Date()
+        };
+        
+        console.log('🧪 Testing with minimal data:', testData);
+        await setDoc(doc(db, 'users', user.uid), testData);
         console.log('✅ User document created successfully in Firestore');
         
         // Test read back
@@ -81,6 +91,16 @@ const Register: React.FC<RegisterProps> = ({ onToggleMode }) => {
           message: firestoreError?.message || 'unknown error',
           stack: firestoreError?.stack || 'no stack trace'
         });
+        
+        // Try to show more specific error info
+        if (firestoreError?.code === 'permission-denied') {
+          console.error('🚫 Permission denied - check Firestore security rules');
+        } else if (firestoreError?.code === 'unavailable') {
+          console.error('🌐 Firestore service unavailable');
+        } else if (firestoreError?.code === 'unauthenticated') {
+          console.error('🔐 User not authenticated');
+        }
+        
         // Don't throw error here - user is already created in Auth
         // Just log the error for debugging
       }
