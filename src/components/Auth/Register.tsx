@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase/config';
 import { User } from '../../types';
 
@@ -59,10 +59,28 @@ const Register: React.FC<RegisterProps> = ({ onToggleMode }) => {
       };
 
       try {
+        console.log('🔍 Testing Firestore connection...');
+        console.log('📊 User data to be saved:', userData);
+        console.log('🔗 Database instance:', db);
+        console.log('🆔 User UID:', user.uid);
+        
         await setDoc(doc(db, 'users', user.uid), userData);
-        console.log('User document created successfully in Firestore');
+        console.log('✅ User document created successfully in Firestore');
+        
+        // Test read back
+        const testDoc = await getDoc(doc(db, 'users', user.uid));
+        if (testDoc.exists()) {
+          console.log('✅ Document exists and can be read back:', testDoc.data());
+        } else {
+          console.log('❌ Document was not created or cannot be read');
+        }
       } catch (firestoreError) {
-        console.error('Error creating user document in Firestore:', firestoreError);
+        console.error('❌ Error creating user document in Firestore:', firestoreError);
+        console.error('Error details:', {
+          code: firestoreError.code,
+          message: firestoreError.message,
+          stack: firestoreError.stack
+        });
         // Don't throw error here - user is already created in Auth
         // Just log the error for debugging
       }
