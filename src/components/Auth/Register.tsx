@@ -58,7 +58,14 @@ const Register: React.FC<RegisterProps> = ({ onToggleMode }) => {
         createdAt: new Date(),
       };
 
-      await setDoc(doc(db, 'users', user.uid), userData);
+      try {
+        await setDoc(doc(db, 'users', user.uid), userData);
+        console.log('User document created successfully in Firestore');
+      } catch (firestoreError) {
+        console.error('Error creating user document in Firestore:', firestoreError);
+        // Don't throw error here - user is already created in Auth
+        // Just log the error for debugging
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
