@@ -74,12 +74,12 @@ const Register: React.FC<RegisterProps> = ({ onToggleMode }) => {
         } else {
           console.log('❌ Document was not created or cannot be read');
         }
-      } catch (firestoreError) {
+      } catch (firestoreError: any) {
         console.error('❌ Error creating user document in Firestore:', firestoreError);
         console.error('Error details:', {
-          code: firestoreError.code,
-          message: firestoreError.message,
-          stack: firestoreError.stack
+          code: firestoreError?.code || 'unknown',
+          message: firestoreError?.message || 'unknown error',
+          stack: firestoreError?.stack || 'no stack trace'
         });
         // Don't throw error here - user is already created in Auth
         // Just log the error for debugging
