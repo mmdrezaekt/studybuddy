@@ -76,7 +76,16 @@ const Register: React.FC<RegisterProps> = ({ onToggleMode }) => {
         console.log('🔐 User authenticated:', user.uid);
         
         // Test user creation with our test function
-        const userCreationTest = await testUserCreation(userData);
+        // Avoid undefined fields in test write too
+        const safeUserData = {
+          uid: userData.uid,
+          email: userData.email,
+          displayName: userData.displayName,
+          ...(userData.photoURL ? { photoURL: userData.photoURL } : {}),
+          ...(userData.major ? { major: userData.major } : {}),
+          createdAt: userData.createdAt,
+        };
+        const userCreationTest = await testUserCreation(safeUserData);
         if (!userCreationTest) {
           console.error('❌ User creation test failed');
           return;

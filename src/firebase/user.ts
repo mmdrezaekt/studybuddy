@@ -16,13 +16,14 @@ export const ensureUserDocument = async (payload?: EnsureUserPayload) => {
   const snap = await getDoc(userRef);
 
   const now = new Date();
-  const baseData = {
+  const baseData: any = {
     uid: currentUser.uid,
-    email: payload?.email ?? currentUser.email ?? undefined,
-    displayName: payload?.displayName ?? currentUser.displayName ?? '',
-    photoURL: payload?.photoURL ?? currentUser.photoURL ?? undefined,
     updatedAt: now,
-  } as any;
+    ...(payload?.email ?? currentUser.email ? { email: payload?.email ?? currentUser.email } : {}),
+    ...(payload?.displayName ?? currentUser.displayName ? { displayName: payload?.displayName ?? currentUser.displayName } : {}),
+    ...(payload?.photoURL ?? currentUser.photoURL ? { photoURL: payload?.photoURL ?? currentUser.photoURL } : {}),
+    ...(payload?.major ? { major: payload.major } : {}),
+  };
 
   if (!snap.exists()) {
     await setDoc(userRef, { ...baseData, createdAt: now }, { merge: true });
