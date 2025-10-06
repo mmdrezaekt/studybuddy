@@ -135,17 +135,6 @@ npm run test:e2e
 npm run test:all
 ```
 
----
-
-## 📱 **Screenshots**
-
-<div align="center">
-  <img src="public/logo192.png" alt="StudyBuddy Logo" width="100" />
-</div>
-
-*Mobile-responsive design with clean, modern interface*
-
----
 
 ## 🚀 **Deployment**
 
@@ -168,31 +157,3 @@ REACT_APP_FIREBASE_PROJECT_ID=your_project_id
 
 ---
 
-## 🤝 **Contributing**
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 📞 **Support**
-
-- 📧 Email: support@studybuddy.app
-- 🐛 Issues: [GitHub Issues](https://github.com/mmdrezaekt/studybuddy-app/issues)
-- 📖 Documentation: [Full Documentation](PROJECT_DOCUMENTATION.md)
-
----
-
-<div align="center">
-  <p>Made with ❤️ by <strong>Mohsen Ektefaei</strong></p>
-  <p>⭐ Star this repo if you found it helpful!</p>
-</div>
