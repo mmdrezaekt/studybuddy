@@ -54,17 +54,17 @@ const AddNote: React.FC<AddNoteProps> = ({ onClose, studyPlanId }) => {
         fileType = formData.file.type;
       }
 
-      // Create note document
-      const noteData: Omit<Note, 'id'> = {
+      // Create note document (omit undefined optional fields)
+      const noteData: any = {
         title: formData.title,
         content: formData.content,
         planId: studyPlanId,
-        uploadedBy: auth.currentUser?.displayName || 'Unknown User',
-        fileUrl: fileUrl || undefined,
-        fileName: fileName || undefined,
-        fileType: fileType || undefined,
+        uploadedBy: auth.currentUser?.displayName || auth.currentUser?.email || 'Unknown User',
         createdAt: new Date(),
       };
+      if (fileUrl) noteData.fileUrl = fileUrl;
+      if (fileName) noteData.fileName = fileName;
+      if (fileType) noteData.fileType = fileType;
 
       await addDoc(collection(db, 'notes'), noteData);
 
