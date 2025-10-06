@@ -114,6 +114,7 @@ const StudyPlanDetail: React.FC = () => {
       
       fetchMembers();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [studyPlan]);
 
   // Reset local progress when studyPlan updates from server

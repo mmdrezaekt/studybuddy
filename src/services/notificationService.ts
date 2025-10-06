@@ -1,7 +1,6 @@
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from '../firebase/config';
-import { AppNotification } from '../types';
 
 // Initialize Firebase Cloud Messaging
 const messaging = getMessaging();

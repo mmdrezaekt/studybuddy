@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+// Firestore imports removed (no direct use here)
 import { auth, db } from '../../firebase/config';
 import { User } from '../../types';
 import { ensureUserDocument } from '../../firebase/user';

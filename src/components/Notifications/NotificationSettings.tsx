@@ -33,6 +33,7 @@ const NotificationSettings: React.FC<NotificationSettingsProps> = ({ userId, onC
   useEffect(() => {
     loadPreferences();
     checkPushPermission();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const loadPreferences = async () => {

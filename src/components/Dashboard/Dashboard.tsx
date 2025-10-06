@@ -9,7 +9,7 @@ import UserProfile from './UserProfile';
 import ProgressOverview from './ProgressOverview';
 import NotificationBell from '../Notifications/NotificationBell';
 import NotificationSettings from '../Notifications/NotificationSettings';
-import { initializeNotifications, onForegroundMessage } from '../../services/notificationService';
+import { initializeNotifications } from '../../services/notificationService';
 
 const Dashboard: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
