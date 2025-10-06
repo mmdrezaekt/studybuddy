@@ -46,14 +46,12 @@ service cloud.firestore {
         request.auth.uid in get(/databases/$(database)/documents/studyPlans/$(resource.data.studyPlanId)).data.participants;
     }
     
-    // Invitations - users can read invitations sent to them
+    // Invitations - anyone can read invitations (for public links), but only authenticated users can create/update
     match /invitations/{invitationId} {
-      allow read: if request.auth != null && 
-        (request.auth.uid == resource.data.inviterId ||
-         request.auth.email == resource.data.inviteeEmail);
+      allow read: if true; // Allow anyone to read invitations (for public links)
       
       allow create: if request.auth != null && 
-        request.auth.uid == resource.data.inviterId;
+        request.auth.uid == request.resource.data.inviterId;
       
       allow update: if request.auth != null && 
         (request.auth.uid == resource.data.inviterId ||
