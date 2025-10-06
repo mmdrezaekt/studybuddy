@@ -52,6 +52,9 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (user) {
+      console.log('🔍 Dashboard: Testing Firestore read connection...');
+      console.log('👤 User UID:', user.uid);
+      
       // Listen to user's study plans
       const q = query(
         collection(db, 'studyPlans'),
@@ -59,8 +62,15 @@ const Dashboard: React.FC = () => {
       );
 
       const unsubscribe = onSnapshot(q, (snapshot) => {
+        console.log('📊 Study plans snapshot received:', {
+          size: snapshot.size,
+          empty: snapshot.empty,
+          hasPendingWrites: snapshot.metadata.hasPendingWrites
+        });
+        
         const plans: StudyPlan[] = [];
         snapshot.forEach((doc) => {
+          console.log('📄 Processing study plan:', doc.id, doc.data());
           plans.push({
             id: doc.id,
             ...doc.data(),
@@ -72,6 +82,9 @@ const Dashboard: React.FC = () => {
         // Sort by creation date (newest first)
         plans.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
         setStudyPlans(plans);
+        console.log('✅ Study plans loaded:', plans.length);
+      }, (error) => {
+        console.error('❌ Error listening to study plans:', error);
       });
 
       return () => unsubscribe();

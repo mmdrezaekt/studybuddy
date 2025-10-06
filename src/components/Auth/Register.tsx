@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase/config';
 import { User } from '../../types';
+import { testFirebaseConnection, testUserCreation } from '../../utils/firebaseTest';
 
 interface RegisterProps {
   onToggleMode: () => void;
@@ -60,30 +61,27 @@ const Register: React.FC<RegisterProps> = ({ onToggleMode }) => {
 
       try {
         console.log('🔍 Testing Firestore connection...');
+        
+        // First test basic Firebase connection
+        const connectionTest = await testFirebaseConnection();
+        if (!connectionTest) {
+          console.error('❌ Firebase connection test failed - stopping user creation');
+          return;
+        }
+        
         console.log('📊 User data to be saved:', userData);
         console.log('🔗 Database instance:', db);
         console.log('🆔 User UID:', user.uid);
         console.log('🔐 User authenticated:', user.uid);
         
-        // Test with minimal data first
-        const testData = {
-          uid: user.uid,
-          email: user.email,
-          displayName: formData.displayName,
-          createdAt: new Date()
-        };
-        
-        console.log('🧪 Testing with minimal data:', testData);
-        await setDoc(doc(db, 'users', user.uid), testData);
-        console.log('✅ User document created successfully in Firestore');
-        
-        // Test read back
-        const testDoc = await getDoc(doc(db, 'users', user.uid));
-        if (testDoc.exists()) {
-          console.log('✅ Document exists and can be read back:', testDoc.data());
-        } else {
-          console.log('❌ Document was not created or cannot be read');
+        // Test user creation with our test function
+        const userCreationTest = await testUserCreation(userData);
+        if (!userCreationTest) {
+          console.error('❌ User creation test failed');
+          return;
         }
+        
+        console.log('✅ All Firebase tests passed - user document created successfully');
       } catch (firestoreError: any) {
         console.error('❌ Error creating user document in Firestore:', firestoreError);
         console.error('Error details:', {

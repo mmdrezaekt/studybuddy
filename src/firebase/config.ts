@@ -27,4 +27,20 @@ export const storage = getStorage(app);
 export const functions = getFunctions(app);
 export { analytics };
 
+// Test Firebase connection
+console.log('🔥 Firebase initialized with config:', {
+  projectId: firebaseConfig.projectId,
+  authDomain: firebaseConfig.authDomain,
+  apiKey: firebaseConfig.apiKey.substring(0, 10) + '...'
+});
+
+// Test Firestore connection
+import { connectFirestoreEmulator } from 'firebase/firestore';
+import { connectAuthEmulator } from 'firebase/auth';
+
+// Check if we're in development mode
+if (process.env.NODE_ENV === 'development') {
+  console.log('🔧 Development mode detected');
+}
+
 export default app;
