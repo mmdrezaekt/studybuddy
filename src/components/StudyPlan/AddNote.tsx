@@ -3,7 +3,7 @@ import { addDoc, collection } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../firebase/config';
 import { auth } from '../../firebase/config';
-import { Note } from '../../types';
+// import { Note } from '../../types'; // Removed unused import
 
 interface AddNoteProps {
   onClose: () => void;

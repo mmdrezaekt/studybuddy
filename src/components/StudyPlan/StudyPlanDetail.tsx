@@ -122,7 +122,7 @@ const StudyPlanDetail: React.FC = () => {
     if (studyPlan) {
       setLocalProgress(null);
     }
-  }, [studyPlan?.updatedAt]);
+  }, [studyPlan]);
 
   const handleTaskToggle = async (taskId: string, completed: boolean) => {
     if (!studyPlan) return;
