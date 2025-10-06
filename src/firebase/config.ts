@@ -34,10 +34,6 @@ console.log('🔥 Firebase initialized with config:', {
   apiKey: firebaseConfig.apiKey.substring(0, 10) + '...'
 });
 
-// Test Firestore connection
-import { connectFirestoreEmulator } from 'firebase/firestore';
-import { connectAuthEmulator } from 'firebase/auth';
-
 // Check if we're in development mode
 if (process.env.NODE_ENV === 'development') {
   console.log('🔧 Development mode detected');
