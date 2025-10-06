@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebase/config';
 import { User } from '../../types';
+import { ensureUserDocument } from '../../firebase/user';
 import { testFirebaseConnection, testUserCreation } from '../../utils/firebaseTest';
 
 interface RegisterProps {
@@ -82,6 +83,12 @@ const Register: React.FC<RegisterProps> = ({ onToggleMode }) => {
         }
         
         console.log('✅ All Firebase tests passed - user document created successfully');
+        await ensureUserDocument({
+          email: user.email,
+          displayName: formData.displayName,
+          photoURL: user.photoURL,
+          major: formData.major,
+        });
       } catch (firestoreError: any) {
         console.error('❌ Error creating user document in Firestore:', firestoreError);
         console.error('Error details:', {

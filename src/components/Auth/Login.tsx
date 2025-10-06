@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../../firebase/config';
+import { ensureUserDocument } from '../../firebase/user';
 
 interface LoginProps {
   onToggleMode: () => void;
@@ -19,6 +20,7 @@ const Login: React.FC<LoginProps> = ({ onToggleMode }) => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      await ensureUserDocument({ email });
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -32,7 +34,12 @@ const Login: React.FC<LoginProps> = ({ onToggleMode }) => {
 
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const cred = await signInWithPopup(auth, provider);
+      await ensureUserDocument({
+        email: cred.user.email,
+        displayName: cred.user.displayName,
+        photoURL: cred.user.photoURL,
+      });
     } catch (err: any) {
       setError(err.message);
     } finally {
