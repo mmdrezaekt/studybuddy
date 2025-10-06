@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { Note } from '../../types';
 
@@ -19,8 +19,7 @@ const NoteList: React.FC<NoteListProps> = ({ studyPlanId }) => {
 
     const q = query(
       collection(db, 'notes'),
-      where('planId', '==', studyPlanId),
-      orderBy('createdAt', 'desc')
+      where('planId', '==', studyPlanId)
     );
 
     const unsubscribe = onSnapshot(q, 
@@ -33,6 +32,7 @@ const NoteList: React.FC<NoteListProps> = ({ studyPlanId }) => {
             createdAt: doc.data().createdAt.toDate(),
           } as Note);
         });
+        notesData.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
         setNotes(notesData);
         setLoading(false);
       },

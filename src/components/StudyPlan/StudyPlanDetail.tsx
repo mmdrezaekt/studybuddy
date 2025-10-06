@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, onSnapshot, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { db, auth } from '../../firebase/config';
 import { StudyPlan, Task, User } from '../../types';
@@ -81,17 +81,17 @@ const StudyPlanDetail: React.FC = () => {
               } as User;
             }
             
-            // If it's a UID, fetch user details
-            const userDoc = await getDocs(query(collection(db, 'users'), where('uid', '==', participantId)));
-            if (!userDoc.empty) {
-              const userData = userDoc.docs[0].data();
+            // If it's a UID, fetch user details by doc id
+            const userSnap = await getDoc(doc(db, 'users', participantId));
+            if (userSnap.exists()) {
+              const userData = userSnap.data();
               return {
                 uid: participantId,
                 email: userData.email,
                 displayName: userData.displayName || userData.email?.split('@')[0] || 'Unknown User',
                 photoURL: userData.photoURL,
                 major: userData.major,
-                createdAt: userData.createdAt?.toDate() || new Date(),
+                createdAt: (userData.createdAt?.toDate && userData.createdAt.toDate()) || new Date(),
               } as User;
             } else {
               // Fallback if user not found in Firestore
