@@ -35,16 +35,26 @@ const CreateStudyPlan: React.FC<CreateStudyPlanProps> = ({ user }) => {
     setSuccess(false);
 
     try {
+      // Validate and clean inputs to avoid Firestore 400
+      const due = new Date(formData.dueDate);
+      if (!formData.title.trim()) {
+        throw new Error('Title is required');
+      }
+      if (isNaN(due.getTime())) {
+        throw new Error('Please select a valid due date');
+      }
+      const participants = Array.from(new Set([user.uid, ...formData.participants.filter(Boolean)]));
+
       const studyPlanData: Omit<StudyPlan, 'id'> = {
         title: formData.title,
-        description: formData.description,
-        subject: formData.subject,
-        dueDate: new Date(formData.dueDate),
+        description: formData.description || '',
+        subject: formData.subject || '',
+        dueDate: due,
         createdAt: new Date(),
         updatedAt: new Date(),
         ownerId: user.uid,
-        isGroup: formData.isGroup,
-        participants: [user.uid, ...formData.participants],
+        isGroup: !!formData.isGroup,
+        participants,
         progress: 0,
         tasks: []
       };
@@ -61,7 +71,8 @@ const CreateStudyPlan: React.FC<CreateStudyPlanProps> = ({ user }) => {
         participants: []
       });
     } catch (err: any) {
-      setError(err.message);
+      console.error('Failed to create study plan:', err);
+      setError(err?.message || 'Failed to create study plan');
     } finally {
       setLoading(false);
     }
