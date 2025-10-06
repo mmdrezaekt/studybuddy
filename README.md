@@ -135,17 +135,6 @@ npm run test:e2e
 npm run test:all
 ```
 
----
-
-## 📱 **Screenshots**
-
-<div align="center">
-  <img src="public/logo192.png" alt="StudyBuddy Logo" width="100" />
-</div>
-
-*Mobile-responsive design with clean, modern interface*
-
----
 
 ## 🚀 **Deployment**
 
