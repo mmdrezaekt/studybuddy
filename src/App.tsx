@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase/config';
 import { User } from './types';
+import { ensureUserDocument } from './firebase/user';
 import AuthWrapper from './components/Auth/AuthWrapper';
 import Dashboard from './components/Dashboard/Dashboard';
 import StudyPlanDetail from './components/StudyPlan/StudyPlanDetail';
@@ -19,7 +20,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         const userData: User = {
           uid: firebaseUser.uid,
@@ -29,6 +30,11 @@ function App() {
           createdAt: new Date(),
         };
         setUser(userData);
+        await ensureUserDocument({
+          email: firebaseUser.email,
+          displayName: firebaseUser.displayName,
+          photoURL: firebaseUser.photoURL,
+        });
       } else {
         setUser(null);
       }
