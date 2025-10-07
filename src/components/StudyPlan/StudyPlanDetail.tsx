@@ -4,6 +4,7 @@ import { doc, onSnapshot, updateDoc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import { db, auth } from '../../firebase/config';
 import { StudyPlan, Task, User } from '../../types';
+import { createNotification } from '../../services/notificationService';
 import TaskList from './TaskList';
 import NoteList from './NoteList';
 import AddTask from './AddTask';
@@ -159,6 +160,17 @@ const StudyPlanDetail: React.FC = () => {
         updatedAt: new Date(),
       });
       console.log('✅ Firestore updated successfully');
+      
+      // Create notification for progress update
+      if (user) {
+        await createNotification(
+          user.uid,
+          'Task Updated',
+          `Task "${updatedTasks.find(t => t.id === taskId)?.title}" has been ${completed ? 'completed' : 'uncompleted'}. Progress: ${Math.round(progress)}%`,
+          'update',
+          studyPlan.id
+        );
+      }
     } catch (error) {
       console.error('❌ Error updating task:', error);
       // Revert local progress on error
@@ -184,6 +196,17 @@ const StudyPlanDetail: React.FC = () => {
       progress,
       updatedAt: new Date(),
     });
+
+    // Create notification for new task
+    if (user) {
+      await createNotification(
+        user.uid,
+        'New Task Added',
+        `New task "${taskData.title}" has been added to the study plan. Progress: ${Math.round(progress)}%`,
+        'update',
+        studyPlan.id
+      );
+    }
 
     setShowAddTask(false);
   };

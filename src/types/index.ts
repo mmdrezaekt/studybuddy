@@ -60,6 +60,7 @@ export interface AppNotification {
   read: boolean;
   createdAt: Date;
   userId: string;
+  studyPlanId?: string;
 }
 
 export interface Invitation {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { User, StudyPlan } from '../../types';
+import { createNotification } from '../../services/notificationService';
 
 interface CreateStudyPlanProps {
   user: User;
@@ -59,7 +60,16 @@ const CreateStudyPlan: React.FC<CreateStudyPlanProps> = ({ user }) => {
         tasks: []
       };
 
-      await addDoc(collection(db, 'studyPlans'), studyPlanData);
+      const docRef = await addDoc(collection(db, 'studyPlans'), studyPlanData);
+      
+      // Create notification for the creator
+      await createNotification(
+        user.uid,
+        'Study Plan Created',
+        `Your study plan "${formData.title}" has been created successfully!`,
+        'update',
+        docRef.id
+      );
       
       setSuccess(true);
       setFormData({

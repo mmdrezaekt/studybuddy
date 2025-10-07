@@ -1,6 +1,9 @@
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { httpsCallable } from 'firebase/functions';
 import { functions } from '../firebase/config';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../firebase/config';
+import { AppNotification } from '../types';
 
 // Initialize Firebase Cloud Messaging
 const messaging = getMessaging();
@@ -107,4 +110,32 @@ export const showLocalNotification = (title: string, body: string, icon?: string
     return notification;
   }
   return null;
+};
+
+// Create notification record in Firestore
+export const createNotification = async (
+  userId: string,
+  title: string,
+  message: string,
+  type: 'reminder' | 'invitation' | 'update' | 'achievement',
+  studyPlanId?: string
+): Promise<boolean> => {
+  try {
+    const notificationData: Omit<AppNotification, 'id'> = {
+      title,
+      message,
+      type,
+      read: false,
+      createdAt: new Date(),
+      userId,
+      studyPlanId
+    };
+
+    await addDoc(collection(db, 'notifications'), notificationData);
+    console.log(`Notification created for user ${userId}: ${title}`);
+    return true;
+  } catch (error) {
+    console.error('Error creating notification:', error);
+    return false;
+  }
 };
