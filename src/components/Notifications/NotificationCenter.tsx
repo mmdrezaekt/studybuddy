@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, orderBy, onSnapshot, updateDoc, doc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
 import { AppNotification } from '../../types';
 
@@ -17,8 +17,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, onClose
 
     const q = query(
       collection(db, 'notifications'),
-      where('userId', '==', userId),
-      orderBy('createdAt', 'desc')
+      where('userId', '==', userId)
+      // orderBy('createdAt', 'desc') // Temporarily removed until index is ready
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -30,6 +30,8 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({ userId, onClose
           createdAt: doc.data().createdAt.toDate(),
         } as AppNotification);
       });
+      // Client-side sort by createdAt descending
+      notificationList.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
       setNotifications(notificationList);
       setLoading(false);
     });
